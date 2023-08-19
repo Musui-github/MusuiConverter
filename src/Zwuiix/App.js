@@ -5,6 +5,7 @@ const AdmZip = require('adm-zip');
 const { v4: uuidv4 } = require('uuid');
 const Jimp = require('jimp');
 const { exec } = require('child_process');
+const color_convert = require('color-convert');
 
 function tintPreserveBrightness(color, tintColor) {
     const colorRgb = Jimp.intToRGBA(color);
@@ -97,6 +98,24 @@ function isDirectory(path) {
     } catch (err) {
         return false;
     }
+}
+
+function cssColorToHex(cssColor) {
+    const cleanedColor = cssColor.replace(/\s/g, '').replace('#', '');
+
+    if (/^([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(cleanedColor)) {
+        return cleanedColor;
+    }
+
+    const namedColors = {
+        aliceblue: 'F0F8FF',
+    };
+
+    if (namedColors.hasOwnProperty(cleanedColor)) {
+        return namedColors[cleanedColor];
+    }
+
+    return '000000';
 }
 
 async function main()
@@ -265,7 +284,7 @@ async function convert(input) {
         }
     }
 
-    const allTexturesPNG = findPngFiles(Path.join(outputPack + `/textures/items/`));
+    const allTexturesPNG = findPngFiles(Path.join(outputPack + `/textures/`));
     for (const textureFile of allTexturesPNG) {
         await Jimp.read(Path.join(textureFile))
             .then(texture => {
@@ -296,7 +315,6 @@ async function convert(input) {
             console.log(`[DEBUG] Image of potion overlay find successfully!`);
         }
     })
-
 
     if (backgroundSplashPotion !== "" && overlaySplashPotion !== "") {
         const pots = JSON.parse(fs.readFileSync(Path.join(process.cwd() + "/resources/potions.json")));
