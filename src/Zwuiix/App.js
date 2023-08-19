@@ -284,7 +284,7 @@ async function convert(input) {
         }
     }
 
-    const allTexturesPNG = findPngFiles(Path.join(outputPack + `/textures/`));
+    const allTexturesPNG = findPngFiles(Path.join(outputPack + `/textures/items/`), findPngFiles(Path.join(outputPack + `/textures/gui`)));
     for (const textureFile of allTexturesPNG) {
         await Jimp.read(Path.join(textureFile))
             .then(texture => {
