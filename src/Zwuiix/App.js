@@ -270,12 +270,11 @@ async function convert(input) {
         await Jimp.read(Path.join(textureFile))
             .then(texture => {
                 texture.scan(0, 0, texture.bitmap.width, texture.bitmap.height, function(x, y, idx) {
-                    const pixelColor = this.getPixelColor(x, y);
-                    if (pixelColor === 0x010101 || pixelColor === 0x010101FF) {
-                        this.setPixelColor(Jimp.rgbaToInt(255, 0, 0, 0), x, y);
+                    const alpha = this.bitmap.data[idx + 3];
+                    if (alpha < 100) {
+                        this.bitmap.data[idx + 3] = 0;
                     }
                 });
-
                 return texture.writeAsync(Path.join(textureFile));
             })
             .then(() => {
