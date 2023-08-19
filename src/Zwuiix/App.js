@@ -320,7 +320,7 @@ async function convert(input) {
                             return overlayImage;
                         })
                         .then(async teintedOverlay => {
-                            return backgroundImage.clone().composite(teintedOverlay, 0, 0, {
+                            return teintedOverlay.clone().composite(backgroundImage, 0, 0, {
                                 mode: Jimp.BLEND_SOURCE_OVER,
                                 opacityDest: 1,
                                 opacitySource: 1
